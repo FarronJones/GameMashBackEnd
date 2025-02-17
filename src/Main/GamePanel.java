@@ -18,145 +18,43 @@ import static utilz.Constants.Directions.*;
 
 
 public class GamePanel extends JPanel {
+	
 		private MouseInputs mouseInputs;
-		private float xDelta = 100, yDelta = 100;
-		private BufferedImage img;
-		private BufferedImage[][] animations;
-		private int aniTick, aniIndex, aniSpeed = 15;
-		private int playerAction = IDLE;
-		private int playerDir = -1;
-		private boolean moving = false;
-		
+		private Game game;
 
-		public GamePanel() {
+		public GamePanel(Game game) {
 		
 			mouseInputs = new MouseInputs(this);
+			this.game = game;
 			
-			importImg();
-			loadAnimations();
 			setPanelSize();
 			addKeyListener(new KeyboardInputs(this));
 			addMouseListener(mouseInputs);
 			addMouseMotionListener(mouseInputs);
 		}
 		
-		private void loadAnimations() {
-			int spriteWidth = img.getWidth() / 6;  // 192 / 6 = 32
-		    int spriteHeight = img.getHeight() / 5; // 160 / 5 = 32
-
-		    animations = new BufferedImage[5][6];
-
-		    for (int j = 0; j < 5; j++) { // Iterate over rows
-		        for (int i = 0; i < 6; i++) { // Iterate over columns
-		            animations[j][i] = img.getSubimage(i * spriteWidth, j * spriteHeight, spriteWidth, spriteHeight);
-		        }
-		    }
-
-			
-		}
-
-		private void importImg() {
-			InputStream is = getClass().getResourceAsStream("/player_sprites.png"); //Imports image
-			
-			try {
-				img = ImageIO.read(is);
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			} finally {
-				try {
-					is.close(); //Frees up resources
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			
-		}
-
+		
 		private void setPanelSize() {
 			Dimension size = new Dimension(1280,800);
-			setMinimumSize(size);
 			setPreferredSize(size);
-			setMaximumSize(size);
-			
-			
 			
 		}
 
-		public void setDirection(int direction) {
-			
-			this.playerDir = direction;
-			moving = true;
-			
-		}
-		
-		public void setMoving(boolean moving) {
-			this.moving = moving;
-		}
-		
-		private void updateAnimationTick() {
-			
-			aniTick++;
-			if(aniTick >= aniSpeed) {
-				aniTick = 0;
-				aniIndex++;
-				if(aniIndex >= GetSpriteAmount(playerAction))
-					aniIndex = 0;
-			}
-			
-		}
-		private void setAnimation() {
-			
-			if(moving)
-				playerAction = RUNNING;
-			else 
-				playerAction = IDLE;
-					
-					
-		}
-		private void updatePos() {
-			
-			if(moving) {
-				switch(playerDir) {
-				case LEFT:
-					xDelta -= 5;
-					break;
-				case UP:
-					yDelta -= 5;
-					break;
-				case RIGHT:
-					xDelta += 5;
-					break;
-				case DOWN:
-					yDelta += 5;
-					break;
-				
-				}
-			}
-			
-		}
-		
 		public void updateGame() {
 			
-			updateAnimationTick();
-			setAnimation();
-			updatePos();
-			
+	
 		}
 		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			
-			
-			g.drawImage(animations[playerAction][aniIndex], (int)xDelta, (int)yDelta, 256, 160, null);
-			
-			
+			game.render(g);
+
 
 		}
 
-		
+		public Game getGame() {
+			return game;
+		}
 
 		
 
