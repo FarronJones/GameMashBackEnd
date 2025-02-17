@@ -41,12 +41,17 @@ public class GamePanel extends JPanel {
 		}
 		
 		private void loadAnimations() {
-			animations = new BufferedImage[9][6];
-			
-			for(int j = 0; j < animations.length; j++)
-				for (int i = 0; i < animations[j].length; i++) {
-					animations[j][i] = img.getSubimage(i*64, j*40, 64, 40);
-				}
+			int spriteWidth = img.getWidth() / 6;  // 192 / 6 = 32
+		    int spriteHeight = img.getHeight() / 5; // 160 / 5 = 32
+
+		    animations = new BufferedImage[5][6];
+
+		    for (int j = 0; j < 5; j++) { // Iterate over rows
+		        for (int i = 0; i < 6; i++) { // Iterate over columns
+		            animations[j][i] = img.getSubimage(i * spriteWidth, j * spriteHeight, spriteWidth, spriteHeight);
+		        }
+		    }
+
 			
 		}
 
