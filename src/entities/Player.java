@@ -16,6 +16,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import utilz.LoadSave;
+
 public class Player extends Entity{
 	
 	private BufferedImage[][] animations;
@@ -134,9 +136,7 @@ public class Player extends Entity{
 		
 		
 		//For burger
-		InputStream is=getClass().getResourceAsStream("/player_sprites.png");
-		try {
-			BufferedImage img=ImageIO.read(is);
+			BufferedImage img=LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 			int spriteWidth = img.getWidth() / 6;  // 192 / 6 = 32
 		    int spriteHeight = img.getHeight() / 5; // 160 / 5 = 32
 	
@@ -147,21 +147,6 @@ public class Player extends Entity{
 		            animations[j][i] = img.getSubimage(i * spriteWidth, j * spriteHeight, spriteWidth, spriteHeight);
 		        }
 		    }
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-			
-		}
-		finally {
-			try {
-				is.close();//Frees up resources
-			}
-			catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-	
 		}
 	
 	public void resetDirBooleans() {
