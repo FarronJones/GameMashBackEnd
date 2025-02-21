@@ -51,7 +51,7 @@ public class Constants {
 //				return 1;
 //			}
 			
-			//Burger
+//			Burger
 			switch(player_action) {
 			
 			case RUNNING: 
@@ -64,7 +64,9 @@ public class Constants {
 			}
 			
 		}
-		
 	}
+}//end class
+		
+	
 
-}
+
