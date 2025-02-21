@@ -3,7 +3,7 @@ package levels;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import Main.Game;
+import main.Game;
 import utilz.LoadSave;
 
 public class LevelManager {
@@ -38,5 +38,9 @@ public class LevelManager {
 	}
 	public void update() {
 		
+	}
+	
+	public Level getCurrentLevel() {
+		return levelOne;
 	}
 }

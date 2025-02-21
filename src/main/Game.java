@@ -1,4 +1,4 @@
-package Main;
+package main;
 
 import java.awt.Graphics;
 
@@ -33,8 +33,10 @@ public class Game implements Runnable {
 		}
 		
 		private void initClasses() {
-			player = new Player(200,200);
 			levelManager = new LevelManager(this);
+//			player = new Player(200,200,(int)(64*SCALE),(int)(40*SCALE));
+			player = new Player(200,200,(int)(32*SCALE),(int)(32*SCALE));
+			player.loadLvlData(levelManager.getCurrentLevel().getlvlData());
 		}
 
 		private void startGameLoop() {

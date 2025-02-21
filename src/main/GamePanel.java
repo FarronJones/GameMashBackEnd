@@ -1,4 +1,4 @@
-package Main;
+package main;
 
 import java.awt.Dimension;
 
@@ -13,10 +13,9 @@ import javax.swing.JPanel;
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
-import static Main.Game.GAME_HEIGHT;
-import static Main.Game.GAME_WIDTH;
-
 import static utilz.Constants.PlayerConstants.*;
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
 import static utilz.Constants.Directions.*;
 
 
