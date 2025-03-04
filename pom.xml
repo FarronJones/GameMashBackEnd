@@ -22,6 +22,12 @@
     </properties>
 
     <dependencies>
+    	 <!-- Core Spring Boot Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    
         <!-- Spring Boot Starter Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -50,7 +56,9 @@
     </dependencies>
 
     <build>
-<plugins>
+    	<sourceDirectory>src/main/java</sourceDirectory>
+    	<testSourceDirectory>src/test/java</testSourceDirectory>
+		<plugins>
             <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -65,8 +73,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
-                    <mainClass>main.MainClass</mainClass>
+                    <mainClass>com.GameMash.MainApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
