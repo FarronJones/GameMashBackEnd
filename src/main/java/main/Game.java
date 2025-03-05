@@ -34,7 +34,9 @@ public class Game implements Runnable {
 		
 		private void initClasses() {
 			levelManager = new LevelManager(this);
+			//Player(0)
 //			player = new Player(200,200,(int)(64*SCALE),(int)(40*SCALE));
+			//Burger
 			player = new Player(200,200,(int)(32*SCALE),(int)(32*SCALE));
 			player.loadLvlData(levelManager.getCurrentLevel().getlvlData());
 		}

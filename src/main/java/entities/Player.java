@@ -1,15 +1,10 @@
 package entities;
 
-import static utilz.Constants.Directions.DOWN;
-import static utilz.Constants.Directions.LEFT;
-import static utilz.Constants.Directions.RIGHT;
-import static utilz.Constants.Directions.UP;
-import static utilz.Constants.PlayerConstants.IDLE;
-import static utilz.Constants.PlayerConstants.RUNNING;
-import static utilz.Constants.PlayerConstants.GetSpriteAmount;
+import static utilz.Constants.PlayerConstants.*;
+
 //	import static utilz.Constants.PlayerConstants.ATTACK_1;
 
-import static utilz.HelpMethods.CanMoveHere;
+import static utilz.HelpMethods.*;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -40,7 +35,7 @@ public class Player extends Entity{
 	private int playerAction = IDLE;
 
 	private boolean moving = false, attacking = false;
-	private boolean left, right, up, down;
+	private boolean left, right, up, down, jump;
 	private float playerSpeed = 2.0f;
 	private int[][] lvlData;
 	
@@ -49,13 +44,20 @@ public class Player extends Entity{
 	//Offset = How far away from (0,0) the top left of the hitbox is
 //	private float xDrawOffset = 21 * Game.SCALE; 
 //	private float yDrawOffset = 4 * Game.SCALE;
-	
+//	
 	//Burger
 	//dimensions for offset of player sprite hitbox = 6x13
 	
 	private float xDrawOffset = 6 * Game.SCALE; 
 	private float yDrawOffset = 13 * Game.SCALE;
-
+	
+	//Jumping / gravity
+	private float airSpeed = 0f;
+	private float gravity = 0.04f * Game.SCALE;
+	private float jumpSpeed = -2.25f * Game.SCALE;
+	private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+	private boolean inAir = false;
+	
 	
 	public Player(float x, float y, int width, int height) {
 		super(x,y, width, height);
@@ -105,6 +107,13 @@ public class Player extends Entity{
 			playerAction = RUNNING;
 		else 
 			playerAction = IDLE;
+		
+		if(inAir) {
+			if(airSpeed < 0)
+				playerAction = JUMP;
+			else
+				playerAction = FALLING;
+		}
 				
 //		if(attacking)
 //			playerAction = ATTACK_1; 
@@ -121,32 +130,68 @@ public class Player extends Entity{
 	private void updatePos() {
 		
 		moving = false;
-		if(!left && !right && !up && !down)
+		
+		if(jump)
+			jump();
+		
+		if(!left && !right && !inAir)
 			return;
 		
-		float xSpeed = 0, ySpeed = 0;
+		float xSpeed = 0;
 			
-		if(left && !right) 
+		if(left) 
 			xSpeed -= playerSpeed;
-		else if(right && !left) 
+		if(right) 
 			xSpeed += playerSpeed;
 		
+		if(!inAir) 
+			if(!IsEntityOnFloor(hitbox, lvlData)) 
+				inAir = true;
+			
+		if(inAir) {
+			
+			if(CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+				hitbox.y += airSpeed;
+				airSpeed += gravity;
+				updateXPos(xSpeed);
+			}else {
+				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+				if(airSpeed > 0) 
+					resetInAir();
+				else
+					airSpeed = fallSpeedAfterCollision;
+				updateXPos(xSpeed);
+			}
+			
+		}else 
+			updateXPos(xSpeed);
+			
+		moving = true;
+	}
 		
-		if(up && !down) 
-			ySpeed -= playerSpeed;
-		else if(down && !up) 
-			ySpeed += playerSpeed;
-
-//		if(CanMoveHere(x+xSpeed, y+ySpeed, width, height, lvlData)) {
-//			this.x += xSpeed;
-//			this.y += ySpeed;
-//			moving = true;
-//		}
-		if(CanMoveHere(hitbox.x+xSpeed, hitbox.y+ySpeed, hitbox.width, hitbox.height, lvlData)) {
+		
+	private void jump() {
+		if(inAir)
+			return;
+		inAir = true;
+		airSpeed = jumpSpeed;
+		
+	}
+	private void resetInAir() {
+		inAir = false;
+		airSpeed = 0;
+		
+	}
+	private void updateXPos(float xSpeed) {
+		if(CanMoveHere(hitbox.x+xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
 			hitbox.x += xSpeed;
-			hitbox.y += ySpeed;
-			moving = true;
+					
+		}else {
+			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+					
 		}
+		
+		
 	}
 		
 	
@@ -165,23 +210,25 @@ public class Player extends Entity{
 		
 		
 		
-			//For burger
-			BufferedImage img=LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
-			int spriteWidth = img.getWidth() / 6;  // 192 / 6 = 32
-		    int spriteHeight = img.getHeight() / 5; // 160 / 5 = 32
-	
-		    animations = new BufferedImage[5][6];
-	
-		    for (int j = 0; j < 5; j++) { // Iterate over rows
-		        for (int i = 0; i < 6; i++) { // Iterate over columns
-		            animations[j][i] = img.getSubimage(i * spriteWidth, j * spriteHeight, spriteWidth, spriteHeight);
-		        }
-		    }
-		}
+		//For burger
+		BufferedImage img=LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+		int spriteWidth = img.getWidth() / 6;  // 192 / 6 = 32
+	    int spriteHeight = img.getHeight() / 5; // 160 / 5 = 32
+
+	    animations = new BufferedImage[5][6];
+
+	    for (int j = 0; j < 5; j++) { // Iterate over rows
+	        for (int i = 0; i < 6; i++) { // Iterate over columns
+	            animations[j][i] = img.getSubimage(i * spriteWidth, j * spriteHeight, spriteWidth, spriteHeight);
+	        }
+	    }
+	}
 	
 	public void loadLvlData(int[][] lvlData) {
 		this.lvlData = lvlData;
 		
+		if(!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
 	}
 	
 	public void resetDirBooleans() {
@@ -222,6 +269,10 @@ public class Player extends Entity{
 		this.down = down;
 	}
 	
+	public void setJump(boolean jump) {
+		this.jump = jump;
+		
+	}
 	
 	
 	}
