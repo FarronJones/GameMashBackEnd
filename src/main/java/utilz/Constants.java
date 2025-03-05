@@ -11,7 +11,7 @@ public class Constants {
 	
 	public static class PlayerConstants{
 		//Player actions 
-		//Pirate
+		//Player(0)
 //		public static final int IDLE = 0;
 //		public static final int RUNNING  = 1;
 //		public static final int JUMP = 2;
@@ -21,7 +21,7 @@ public class Constants {
 //		public static final int ATTACK_1 = 6;
 //		public static final int ATTACK_JUMP_1 = 7;
 //		public static final int ATTACK_JUMP_2 = 8;
-		
+//		
 		//Burger
 		public static final int IDLE = 1;
 		public static final int RUNNING  = 2;
