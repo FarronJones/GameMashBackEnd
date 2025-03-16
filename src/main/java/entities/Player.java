@@ -1,15 +1,18 @@
 package entities;
 
-import static utilz.Constants.PlayerConstants.*;
-
-//	import static utilz.Constants.PlayerConstants.ATTACK_1;
-
-import static utilz.HelpMethods.*;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import main.Game;
+import static utilz.Constants.PlayerConstants.FALLING;
+import static utilz.Constants.PlayerConstants.GetSpriteAmount;
+import static utilz.Constants.PlayerConstants.IDLE;
+import static utilz.Constants.PlayerConstants.JUMP;
+import static utilz.Constants.PlayerConstants.RUNNING;
+import static utilz.HelpMethods.CanMoveHere;
+import static utilz.HelpMethods.GetEntityXPosNextToWall;
+import static utilz.HelpMethods.GetEntityYPosUnderRoofOrAboveFloor;
+import static utilz.HelpMethods.IsEntityOnFloor;
 import utilz.LoadSave;
 
 /*
@@ -36,7 +39,7 @@ public class Player extends Entity{
 
 	private boolean moving = false, attacking = false;
 	private boolean left, right, up, down, jump;
-	private float playerSpeed = 2.0f;
+	private float playerSpeed = 1.0f*Game.SCALE;
 	private int[][] lvlData;
 	
 	//Player(0)
@@ -67,7 +70,7 @@ public class Player extends Entity{
 //		initHitbox(x, y, 20*Game.SCALE, 28*Game.SCALE); //Player(0) Sprite hitbox is 20x28;
 		
 		//Burger
-		initHitbox(x, y, 20*Game.SCALE, 18*Game.SCALE); //Burger Sprite hitbox is 20x18;
+		initHitbox(x, y, (int)(20*Game.SCALE), (int)(18*Game.SCALE)); //Burger Sprite hitbox is 20x18;
 		
 	}
 	public void update() {
