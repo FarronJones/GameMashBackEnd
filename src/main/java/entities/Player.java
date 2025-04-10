@@ -1,90 +1,101 @@
-package entities;
+	package entities;
+	
+	import java.awt.Graphics;
+	import java.awt.image.BufferedImage;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
+import gamestates.Playing;
 import main.Game;
-import static utilz.Constants.PlayerConstants.FALLING;
-import static utilz.Constants.PlayerConstants.GetSpriteAmount;
-import static utilz.Constants.PlayerConstants.IDLE;
-import static utilz.Constants.PlayerConstants.JUMP;
-import static utilz.Constants.PlayerConstants.RUNNING;
-import static utilz.HelpMethods.CanMoveHere;
-import static utilz.HelpMethods.GetEntityXPosNextToWall;
-import static utilz.HelpMethods.GetEntityYPosUnderRoofOrAboveFloor;
-import static utilz.HelpMethods.IsEntityOnFloor;
-import utilz.LoadSave;
-
-/*
- * In order to change sprite you have to edit a few methods in these classes
- * Player (player class and loadAnimations class)
- * Constants (PlayerConstants and GetSpriteAmount)
- * Game (initClasses)
- * LoadSave (constants)
- * 
- * Easy way to uncomment on Eclipse
- * Ctrl + /
- * 
- * or 
- * 
- * Source + toggle comment
- * 
- */
-
-public class Player extends Entity{
-	
-	private BufferedImage[][] animations;
-	private int aniTick, aniIndex, aniSpeed = 15;
-	private int playerAction = IDLE;
-
-	private boolean moving = false, attacking = false;
-	private boolean left, right, up, down, jump;
-	private float playerSpeed = 1.0f*Game.SCALE;
-	private int[][] lvlData;
-	
-	//Player(0)
-	//dimensions for player(0) sprite hitbox = 21x4
-	//Offset = How far away from (0,0) the top left of the hitbox is
-//	private float xDrawOffset = 21 * Game.SCALE; 
-//	private float yDrawOffset = 4 * Game.SCALE;
-//	
-	//Burger
-	//dimensions for offset of player sprite hitbox = 6x13
-	
-	private float xDrawOffset = 6 * Game.SCALE; 
-	private float yDrawOffset = 13 * Game.SCALE;
-	
-	//Jumping / gravity
-	private float airSpeed = 0f;
-	private float gravity = 0.04f * Game.SCALE;
-	private float jumpSpeed = -2.25f * Game.SCALE;
-	private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
-	private boolean inAir = false;
+	import static utilz.Constants.PlayerConstants.FALLING;
+	import static utilz.Constants.PlayerConstants.GetSpriteAmount;
+	import static utilz.Constants.PlayerConstants.IDLE;
+	import static utilz.Constants.PlayerConstants.JUMP;
+	import static utilz.Constants.PlayerConstants.RUNNING;
+	import static utilz.HelpMethods.CanMoveHere;
+	import static utilz.HelpMethods.GetEntityXPosNextToWall;
+	import static utilz.HelpMethods.GetEntityYPosUnderRoofOrAboveFloor;
+	import static utilz.HelpMethods.IsEntityOnFloor;
+	import utilz.LoadSave;
 	
 	
-	public Player(float x, float y, int width, int height) {
-		super(x,y, width, height);
-		loadAnimations();
+	/*
+	 * In order to change sprite you have to edit a few methods in these classes
+	 * Player (player class and loadAnimations class)
+	 * Constants (PlayerConstants and GetSpriteAmount)
+	 * Game (initClasses)
+	 * LoadSave (constants)
+	 * 
+	 * Easy way to uncomment on Eclipse
+	 * Ctrl + /
+	 * 
+	 * or 
+	 * 
+	 * Source + toggle comment
+	 * 
+	 */
+	
+	public class Player extends Entity{
+		
+		private BufferedImage[][] animations;
+		private int aniTick, aniIndex, aniSpeed = 15;
+		private int playerAction = IDLE;
+	
+		private boolean moving = false, attacking = false;
+		private boolean left, right, up, down, jump;
+		private float playerSpeed = 1.0f*Game.SCALE;
+		private int[][] lvlData;
 		
 		//Player(0)
-//		initHitbox(x, y, 20*Game.SCALE, 28*Game.SCALE); //Player(0) Sprite hitbox is 20x28;
-		
+		//dimensions for player(0) sprite hitbox = 21x4
+		//Offset = How far away from (0,0) the top left of the hitbox is
+	//	private float xDrawOffset = 21 * Game.SCALE; 
+	//	private float yDrawOffset = 4 * Game.SCALE;
+	//	
 		//Burger
-		initHitbox(x, y, (int)(20*Game.SCALE), (int)(18*Game.SCALE)); //Burger Sprite hitbox is 20x18;
+		//dimensions for offset of player sprite hitbox = 6x13
 		
-	}
-	public void update() {
-		updatePos();
-		updateAnimationTick();
-		setAnimation();
+		private float xDrawOffset = 6 * Game.SCALE; 
+		private float yDrawOffset = 13 * Game.SCALE;
+		
+		//Jumping / gravity
+		private float airSpeed = 0f;
+		private float gravity = 0.04f * Game.SCALE;
+		private float jumpSpeed = -2.25f * Game.SCALE;
+		private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+		private boolean inAir = false;
+		
+		private int maxHealth = 100;
+		private int currentHealth = maxHealth;
+		private Playing playing;
 		
 		
-	}
+		public Player(float x, float y, int width, int height, Playing playing) {
+			super(x,y, width, height);
+			this.playing = playing;
+			loadAnimations();
+			
+			//Player(0)
+	//		initHitbox(x, y, 20*Game.SCALE, 28*Game.SCALE); //Player(0) Sprite hitbox is 20x28;
+			
+			//Burger
+			initHitbox(x, y, (int)(20*Game.SCALE), (int)(18*Game.SCALE)); //Burger Sprite hitbox is 20x18;
+			
+		}
+		public void update() {
+			if(currentHealth <=0) {
+				playing.setGameOver(true);
+			return;
+			}
+			
+			updatePos();
+			updateAnimationTick();
+			setAnimation();
+			
+		}
 	
 	public void render(Graphics g, int lvlOffset) {
 				
 		g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
-		drawHitbox(g);
+		//z`drawHitbox(g);
 	}
 		
 	
@@ -278,6 +289,21 @@ public class Player extends Entity{
 	
 	public void setJump(boolean jump) {
 		this.jump = jump;
+		
+	}
+	public void resetAll() {
+		resetDirBooleans();
+		inAir = false;
+		moving = false;
+		playerAction = IDLE;
+		currentHealth = maxHealth;
+		
+		hitbox.x = x;
+		hitbox.y = y;
+		
+		if(!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
+		
 		
 	}
 	
