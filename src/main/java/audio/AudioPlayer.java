@@ -76,7 +76,8 @@ public class AudioPlayer {
 		if (songs[currentSongId].isActive())
 			songs[currentSongId].stop();
 	}
-
+	
+	//Make sure this is uncommented later for the level songs to work once we have actual levels
 	//public void setLevelSong(int lvlIndex) {
 		//if (lvlIndex % 2 == 0)
 			//playSong(LEVEL_1); // FIXED typo: playsong -> playSong
