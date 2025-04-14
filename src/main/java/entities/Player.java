@@ -1,7 +1,8 @@
 	package entities;
 	
 	import java.awt.Graphics;
-	import java.awt.image.BufferedImage;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 
 import gamestates.Playing;
 import main.Game;
@@ -79,6 +80,12 @@ import main.Game;
 			//Burger
 			initHitbox(x, y, (int)(20*Game.SCALE), (int)(18*Game.SCALE)); //Burger Sprite hitbox is 20x18;
 			
+		}
+		public void setSpawn(Point spawn) {
+			this.x = spawn.x;
+			this.y = spawn.y;
+			hitbox.x = x;
+			hitbox.y = y;
 		}
 		public void update() {
 			if(currentHealth <=0) {

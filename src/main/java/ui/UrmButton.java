@@ -3,7 +3,7 @@ package ui;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import static utilz.Constants.URMButtons.URM_DEFAULT_SIZE;
+import static utilz.Constants.URMButtons.*;
 import utilz.LoadSave;
 
 public class UrmButton extends PauseButton{
@@ -35,7 +35,7 @@ public class UrmButton extends PauseButton{
 
 
     public void draw(Graphics g){
-        g.drawImage(imgs[index], x, y, URM_DEFAULT_SIZE,URM_DEFAULT_SIZE,null);
+        g.drawImage(imgs[index], x, y, URM_SIZE,URM_SIZE,null);
 
     }
 
