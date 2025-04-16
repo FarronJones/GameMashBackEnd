@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 public class Player {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
     private int userId;
 
@@ -28,26 +29,73 @@ public class Player {
 
     @Column(name = "LastLoginDate")
     private Timestamp lastLoginDate;
-    
-    public void setEmail(String email) {
-        this.email = email;
+
+    @Column(name = "avatarid")
+    private Integer avatarid;
+
+    // Getters and Setters
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return email;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return password;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-    // Add avatar, language, savedProgress, achievements if needed
+    public String getLastName() {
+        return lastName;
+    }
 
-    // Getters and setters
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Timestamp getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Timestamp registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public Timestamp getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Timestamp lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public Integer getAvatarid() {
+        return avatarid;
+    }
+
+    public void setAvatarid(Integer avatarid) {
+        this.avatarid = avatarid;
+    }
 }
