@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 
 import gamestates.Playing;
 import main.Game;
+
+	import static utilz.Constants.*;
 	import static utilz.Constants.PlayerConstants.FALLING;
 	import static utilz.Constants.PlayerConstants.GetSpriteAmount;
 	import static utilz.Constants.PlayerConstants.IDLE;
@@ -37,12 +39,11 @@ import main.Game;
 	public class Player extends Entity{
 		
 		private BufferedImage[][] animations;
-		private int aniTick, aniIndex, aniSpeed = 15;
-		private int playerAction = IDLE;
+	
 	
 		private boolean moving = false, attacking = false;
 		private boolean left, right, up, down, jump;
-		private float playerSpeed = 1.0f*Game.SCALE;
+		
 		private int[][] lvlData;
 		
 		//Player(0)
@@ -59,26 +60,28 @@ import main.Game;
 		
 		//Jumping / gravity
 		private float airSpeed = 0f;
-		private float gravity = 0.04f * Game.SCALE;
 		private float jumpSpeed = -2.25f * Game.SCALE;
 		private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
-		private boolean inAir = false;
 		
-		private int maxHealth = 100;
-		private int currentHealth = maxHealth;
+		
+		
 		private Playing playing;
 		
 		
 		public Player(float x, float y, int width, int height, Playing playing) {
 			super(x,y, width, height);
 			this.playing = playing;
+			this.state = IDLE;
+			this.maxHealth = 100;
+			this.currentHealth = maxHealth;
+			this.walkSpeed = Game.SCALE * 1.0f;
 			loadAnimations();
 			
 			//Player(0)
-	//		initHitbox(x, y, 20*Game.SCALE, 28*Game.SCALE); //Player(0) Sprite hitbox is 20x28;
+	//		initHitbox(20, 28); //Player(0) Sprite hitbox is 20x28;
 			
 			//Burger
-			initHitbox(x, y, (int)(20*Game.SCALE), (int)(18*Game.SCALE)); //Burger Sprite hitbox is 20x18;
+			initHitbox(20, 18); //Burger Sprite hitbox is 20x18;
 			
 		}
 		public void setSpawn(Point spawn) {
@@ -101,7 +104,7 @@ import main.Game;
 	
 	public void render(Graphics g, int lvlOffset) {
 				
-		g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
+		g.drawImage(animations[state][aniIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
 		//z`drawHitbox(g);
 	}
 		
@@ -109,10 +112,10 @@ import main.Game;
 	private void updateAnimationTick() {
 		
 		aniTick++;
-		if(aniTick >= aniSpeed) {
+		if(aniTick >= ANI_SPEED) {
 			aniTick = 0;
 			aniIndex++;
-			if(aniIndex >= GetSpriteAmount(playerAction)) {
+			if(aniIndex >= GetSpriteAmount(state)) {
 				aniIndex = 0;
 				attacking = false;
 			}
@@ -122,24 +125,24 @@ import main.Game;
 	}
 	private void setAnimation() {
 		
-		int startAni = playerAction;
+		int startAni = state;
 		
 		if(moving)
-			playerAction = RUNNING;
+			state = RUNNING;
 		else 
-			playerAction = IDLE;
+			state = IDLE;
 		
 		if(inAir) {
 			if(airSpeed < 0)
-				playerAction = JUMP;
+				state = JUMP;
 			else
-				playerAction = FALLING;
+				state = FALLING;
 		}
 				
 //		if(attacking)
 //			playerAction = ATTACK_1; 
 		
-		if(startAni != playerAction)
+		if(startAni != state)
 			resetAniTick();
 				
 	}
@@ -165,9 +168,9 @@ import main.Game;
 		float xSpeed = 0;
 			
 		if(left) 
-			xSpeed -= playerSpeed;
+			xSpeed -= walkSpeed;
 		if(right) 
-			xSpeed += playerSpeed;
+			xSpeed += walkSpeed;
 		
 		if(!inAir) 
 			if(!IsEntityOnFloor(hitbox, lvlData)) 
@@ -177,7 +180,7 @@ import main.Game;
 			
 			if(CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				hitbox.y += airSpeed;
-				airSpeed += gravity;
+				airSpeed += GRAVITY;
 				updateXPos(xSpeed);
 			}else {
 				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
@@ -302,7 +305,7 @@ import main.Game;
 		resetDirBooleans();
 		inAir = false;
 		moving = false;
-		playerAction = IDLE;
+		state = IDLE;
 		currentHealth = maxHealth;
 		
 		hitbox.x = x;
