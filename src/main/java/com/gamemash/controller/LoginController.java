@@ -3,9 +3,13 @@ package com.gamemash.controller;
 import com.gamemash.entity.Player;
 import com.gamemash.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -16,7 +20,7 @@ public class LoginController {
     private PlayerRepository playerRepository;
 
     @PostMapping("/login")
-    public String login(@RequestBody Player loginRequest) {
+    public ResponseEntity<?> login(@RequestBody Player loginRequest) {
         System.out.println("Login Request Received:");
         System.out.println("Email: " + loginRequest.getEmail());
         System.out.println("Password: " + loginRequest.getPassword());
@@ -24,41 +28,63 @@ public class LoginController {
         if (loginRequest.getEmail() == null || loginRequest.getPassword() == null ||
             loginRequest.getEmail().isEmpty() || loginRequest.getPassword().isEmpty()) {
             System.out.println("Missing email or password");
-            return "Missing email or password";
+            return ResponseEntity.badRequest().body("Missing email or password");
         }
 
         Optional<Player> player = playerRepository.findByEmailAndPassword(
                 loginRequest.getEmail(), loginRequest.getPassword());
 
         if (player.isPresent()) {
+            Player p = player.get();
             System.out.println("Login successful for: " + loginRequest.getEmail());
-            return "Login successful";
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("firstName", p.getFirstName());
+            response.put("avatarid", p.getAvatarid());
+
+            return ResponseEntity.ok(response);
         } else {
             System.out.println("Invalid credentials for: " + loginRequest.getEmail());
-            return "Invalid credentials";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody Player newPlayer) {
-        System.out.println("Signup Request Received:");
-        System.out.println("Email: " + newPlayer.getEmail());
-        System.out.println("Password: " + newPlayer.getPassword());
+    public String signup(@RequestBody Map<String, Object> payload) {
+        String email = (String) payload.get("email");
+        String password = (String) payload.get("password");
+        String firstName = (String) payload.get("firstName");
+        String lastName = (String) payload.get("lastName");
+        Integer avatarid = (Integer) payload.get("avatarid");
 
-        if (newPlayer.getEmail() == null || newPlayer.getPassword() == null ||
-            newPlayer.getEmail().isEmpty() || newPlayer.getPassword().isEmpty()) {
+        System.out.println("Signup Request Received:");
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + password);
+        System.out.println("First Name: " + firstName);
+        System.out.println("Last Name: " + lastName);
+        System.out.println("Avatar ID: " + avatarid);
+
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
             System.out.println("Missing email or password");
             return "Missing email or password";
         }
 
-        Optional<Player> existing = playerRepository.findByEmail(newPlayer.getEmail());
+        Optional<Player> existing = playerRepository.findByEmail(email);
         if (existing.isPresent()) {
-            System.out.println("Email already in use: " + newPlayer.getEmail());
+            System.out.println("Email already in use: " + email);
             return "Email already in use";
         }
 
+        Player newPlayer = new Player();
+        newPlayer.setEmail(email);
+        newPlayer.setPassword(password);
+        newPlayer.setFirstName(firstName);
+        newPlayer.setLastName(lastName);
+        newPlayer.setAvatarid(avatarid);
+
         playerRepository.save(newPlayer);
-        System.out.println("Signup successful for: " + newPlayer.getEmail());
+        System.out.println("Signup successful for: " + email);
         return "Signup successful";
     }
 }

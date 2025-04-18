@@ -10,6 +10,7 @@ import java.util.Random;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import objects.ObjectManager;
 import ui.PauseOverlay;
 import ui.GameOverOverlay;
 import ui.LevelCompletedOverlay;
@@ -20,6 +21,7 @@ import static utilz.Constants.Environment.*;
 public class Playing extends State implements Statemethods{
     private Player player;
     private LevelManager levelManager;
+    private ObjectManager objectManager;
     private PauseOverlay pauseOverlay;
     private GameOverOverlay gameOverOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
@@ -71,6 +73,7 @@ public class Playing extends State implements Statemethods{
 
         private void initClasses() {
 			levelManager = new LevelManager(game);
+			objectManager = new ObjectManager(this);
 			player = new Player(200,200,(int)(32*Game.SCALE),(int)(32*Game.SCALE), this);
 			player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 			player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
@@ -87,8 +90,9 @@ public class Playing extends State implements Statemethods{
 			return player;
 		}
 
-
-
+		public ObjectManager getObjectManager() {
+    		return objectManager;
+    	}
 
 
 		@Override
@@ -99,6 +103,7 @@ public class Playing extends State implements Statemethods{
 				levelCompletedOverlay.update();
 			} else if (!gameOver) {
 				levelManager.update();
+				objectManager.update();
 				player.update();
 				// Not implemented yet
 				//enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
@@ -138,6 +143,8 @@ public class Playing extends State implements Statemethods{
 			
            levelManager.draw(g, xLvlOffset);
            player.render(g, xLvlOffset);
+           objectManager.draw(g, xLvlOffset);
+           
            if(paused) {
         	   g.setColor(new Color(0,0,0,100));
         	   g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
