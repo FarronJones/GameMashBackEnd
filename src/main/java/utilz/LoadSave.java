@@ -14,7 +14,6 @@ import main.Game;
 public class LoadSave {
 	
 	public static final String PLAYER_ATLAS = "player_sprites.png";
-	//To use new tileset use outside_sprites(2).png
 	public static final String LEVEL_ATLAS = "outside_sprites(1).png";
 	public static final String LEVEL_ONE_DATA = "level_one_data_long.png";
 	public static final String MENU_BUTTONS = "button_atlas.png";
