@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -52,7 +53,7 @@ public class Playing extends State implements Statemethods{
             	smallCloudsPos[i] = (int)(70 * Game.SCALE) + rnd. nextInt((int)(100 * Game.SCALE));
             
             calcLvlOffset();
-    		//loadStartLevel();
+    		loadStartLevel();
         }
     
 
@@ -61,11 +62,14 @@ public class Playing extends State implements Statemethods{
 		levelManager.loadNextLevel();
 		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
 	}
-/*
+
 	private void loadStartLevel() {
-		enemyManager.loadEnemies(levelManager.getCurrentLevel());
+		//enemyManager.loadEnemies(levelManager.getCurrentLevel());
+		objectManager.loadObjects(levelManager.getCurrentLevel());
 	}
-*/
+
+    
+    
 	private void calcLvlOffset() {
 		maxLvlOffsetX = levelManager.getCurrentLevel().getLvlOffset();
 	}
@@ -172,6 +176,7 @@ public class Playing extends State implements Statemethods{
         	paused = false;
         	lvlCompleted = false;
         	player.resetAll();
+        	objectManager.resetAllObjects();
         	
 			
 		}
@@ -180,7 +185,10 @@ public class Playing extends State implements Statemethods{
         	this.gameOver = gameOver;
 			
 		}
-
+        
+        public void checkPotionTouched(Rectangle2D.Float hitBox) {
+        	objectManager.checkObjectTouched(hitBox);
+        }
 
 		public void mouseDragged(MouseEvent e){
 			if(!gameOver)

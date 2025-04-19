@@ -97,10 +97,18 @@ import main.Game;
 			}
 			
 			updatePos();
+			if(moving)
+				checkPotionTouched();
 			updateAnimationTick();
 			setAnimation();
 			
 		}
+	
+	private void checkPotionTouched() {
+			playing.checkPotionTouched(hitbox);
+			
+		}
+	
 	
 	public void render(Graphics g, int lvlOffset) {
 				
@@ -221,6 +229,12 @@ import main.Game;
 		
 		
 	}
+	
+	//Placeholder to show that blue potion was grabbed
+	public void changePower(int value) {
+		System.out.println("Added power!");
+		
+	}
 		
 	
 	
@@ -316,6 +330,7 @@ import main.Game;
 		
 		
 	}
+	
 	
 	
 	}
