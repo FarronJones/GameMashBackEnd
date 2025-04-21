@@ -99,12 +99,18 @@ import main.Game;
 			updatePos();
 			if(moving)
 				checkPotionTouched();
-			updateAnimationTick();
-			setAnimation();
-			
-		}
-	
-	private void checkPotionTouched() {
+				checkSpikesTouched();
+							updateAnimationTick();
+							setAnimation();
+							
+						}
+					
+		private void checkSpikesTouched() {
+					playing.checkSpikesTouched(this);
+			}
+
+		
+					private void checkPotionTouched() {
 			playing.checkPotionTouched(hitbox);
 			
 		}
@@ -330,7 +336,10 @@ import main.Game;
 		
 		
 	}
-	
+
+	public void kill() {
+        currentHealth=0;
+    }
 	
 	
 	}

@@ -9,6 +9,7 @@ import main.Game;
 import objects.GameContainer;
 import objects.Potion;
 import utilz.HelpMethods;
+import objects.Spike;
 
 import static utilz.HelpMethods.GetLevelData;
 //import static utilz.HelpMethods.GetCrabs;
@@ -21,6 +22,7 @@ public class Level {
 	//private ArrayList<Crabby> crabs;
 	
 	private ArrayList<Potion> potions;
+	private ArrayList<Spike> spikes;
 	private ArrayList<GameContainer> containers;
 	
 	private int lvlTilesWide;
@@ -35,11 +37,16 @@ public class Level {
 	//	createEnemies();
 		createPotions();
 		createContainers();
+		createSpikes();
 		calcLvlOffsets();
 		calcPlayerSpawn();
 	}
 	
-	
+	private void createSpikes(){
+		spikes=HelpMethods.GetSpikes(img);
+	}
+
+
 	private void createContainers() {
 		containers = HelpMethods.GetContainers(img);
 		
@@ -102,6 +109,10 @@ public class Level {
 	
 	public ArrayList<GameContainer> getContainers() {
 		return containers;
+	}
+
+	public ArrayList<Spike> getSpikes(){
+		return spikes;
 	}
 	
 }
