@@ -190,6 +190,11 @@ public class Playing extends State implements Statemethods{
         	objectManager.checkObjectTouched(hitBox);
         }
 
+
+		public void checkSpikesTouched(Player p) {
+            objectManager.checkSpikesTouched(p);
+        }
+
 		public void mouseDragged(MouseEvent e){
 			if(!gameOver)
 				if(paused)
@@ -316,4 +321,10 @@ public class Playing extends State implements Statemethods{
             
             //throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
         }
+		
+		public LevelManager getLevelManager(){
+			return levelManager;
+		}
+
+
 }
