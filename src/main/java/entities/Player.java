@@ -46,8 +46,7 @@ import main.Game;
 		
 		private int[][] lvlData;
 		
-		//Player(0)
-		//dimensions for player(0) sprite hitbox = 21x4
+	
 		//Offset = How far away from (0,0) the top left of the hitbox is
 	//	private float xDrawOffset = 21 * Game.SCALE; 
 	//	private float yDrawOffset = 4 * Game.SCALE;
@@ -60,7 +59,7 @@ import main.Game;
 		
 		//Jumping / gravity
 		private float airSpeed = 0f;
-		private float jumpSpeed = -2.25f * Game.SCALE;
+		private float jumpSpeed = -2.5f * Game.SCALE;
 		private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
 		
 		
@@ -77,8 +76,6 @@ import main.Game;
 			this.walkSpeed = Game.SCALE * 1.0f;
 			loadAnimations();
 			
-			//Player(0)
-	//		initHitbox(20, 28); //Player(0) Sprite hitbox is 20x28;
 			
 			//Burger
 			initHitbox(20, 18); //Burger Sprite hitbox is 20x18;
@@ -119,7 +116,7 @@ import main.Game;
 	public void render(Graphics g, int lvlOffset) {
 				
 		g.drawImage(animations[state][aniIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
-		//z`drawHitbox(g);
+		drawHitbox(g);
 	}
 		
 	

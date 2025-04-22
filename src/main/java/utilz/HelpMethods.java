@@ -162,7 +162,7 @@ public class HelpMethods {
 					Color color = new Color(img.getRGB(i, j));
 					int value = color.getBlue();
 					if (value == SPIKE)
-						list.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+						list.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, SPIKE));
 					
 				}
 			return list;
