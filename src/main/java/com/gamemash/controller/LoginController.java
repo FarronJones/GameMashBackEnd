@@ -87,4 +87,35 @@ public class LoginController {
         System.out.println("Signup successful for: " + email);
         return "Signup successful";
     }
+
+    @GetMapping("/player/{email}")
+    public ResponseEntity<?> getPlayerByEmail(@PathVariable String email) {
+        Optional<Player> player = playerRepository.findByEmail(email);
+        if (player.isPresent()) {
+            return ResponseEntity.ok(player.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Player not found");
+        }
+    }
+
+    @PutMapping("/player/update")
+    public ResponseEntity<?> updatePlayer(@RequestBody Map<String, Object> payload) {
+        String email = (String) payload.get("email");
+        String firstName = (String) payload.get("firstName");
+        String lastName = (String) payload.get("lastName");
+        Integer avatarid = (Integer) payload.get("avatarid");
+
+        Optional<Player> optionalPlayer = playerRepository.findByEmail(email);
+        if (optionalPlayer.isPresent()) {
+            Player player = optionalPlayer.get();
+            player.setFirstName(firstName);
+            player.setLastName(lastName);
+            player.setAvatarid(avatarid);
+
+            playerRepository.save(player);
+            return ResponseEntity.ok("Profile updated");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Player not found");
+        }
+    }
 }
