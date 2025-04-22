@@ -1,5 +1,6 @@
 package objects;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -32,13 +33,33 @@ public class ObjectManager {
 		}
 		
 		public void checkObjectTouched(Rectangle2D.Float hitbox) {
-			for(Potion p: potions)
+			
+			for(Potion p: potions) {
 				if(p.isActive()) {
 					if(hitbox.intersects(p.getHitbox())) {
 						p.setActive(false);
-						applyEffectToPlayer(p);
+						//applyEffectToPlayer(p);
+						
 					}
+					
 				}
+				
+			//For completing level
+			boolean allObtained = true;
+			
+			for (Potion p1: potions) {
+				if(p1.isActive()) {
+					allObtained = false;
+					break;
+				}
+			}
+			
+			if (allObtained) {
+				playing.setLevelCompleted(true);
+				System.out.println("Level completed!");
+			}
+			
+			}
 			
 		}
 		
@@ -100,16 +121,32 @@ public class ObjectManager {
 			for(GameContainer gc : containers)
 				if(gc.isActive())
 					gc.update();
+			
+			
 }
 		public void draw(Graphics g, int xLvlOffSet) {
 			drawPotions(g,xLvlOffSet);
 			drawContainers(g,xLvlOffSet);
 			drawTraps(g, xLvlOffSet);
+			
+			
 						
 					}
 		private void drawTraps(Graphics g, int xLvlOffSet) {
-				for(Spike s : spikes)
-					g.drawImage(spikeImg, (int)(s.getHitbox().x- xLvlOffSet), (int)(s.getHitbox().y-s.getxDrawOffSet()), SPIKE_WIDTH,SPIKE_HEIGHT,null);
+				for(Spike s : spikes) {
+					g.drawImage(spikeImg, (int)(s.getHitbox().x- xLvlOffSet), (int)(s.getHitbox().y-s.getyDrawOffset()), SPIKE_WIDTH,SPIKE_HEIGHT,null);
+				
+				// Spike hitbox
+//		        g.setColor(Color.RED);
+//		        g.drawRect(
+//		            (int)(s.getHitbox().x - xLvlOffSet),
+//		            (int)(s.getHitbox().y),
+//		            (int)(s.getHitbox().width),
+//		            (int)(s.getHitbox().height) 
+//		            );
+		            
+				}
+		
 			}
 			
 					private void drawContainers(Graphics g, int xLvlOffSet) {
