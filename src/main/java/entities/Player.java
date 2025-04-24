@@ -102,7 +102,7 @@ import main.Game;
 
 	    public void render(Graphics g, int lvlOffset) {
 	        g.drawImage(animations[state][aniIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
-	        drawHitbox(g);
+	        //drawHitbox(g);
 	    }
 
 	    private void updateAnimationTick() {
