@@ -38,6 +38,7 @@ import main.Game;
 	
 	public class Player extends Entity{
 		
+		private static final int DEAD = 0;
 		private BufferedImage[][] animations;
 	    private BufferedImage spriteSheet;
 
@@ -76,10 +77,27 @@ import main.Game;
 	    }
 
 	    public void update() {
+	    	
+	    	
 	        if (currentHealth <= 0) {
-	            playing.setGameOver(true);
-	            return;
-	        }
+	        	if (state != DEAD) {
+	        		state = DEAD;
+	        		aniTick = 0;
+	        		aniIndex=0;
+	        		playing.setPlayerDying(true);
+				} else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= ANI_SPEED - 1) {
+					playing.setGameOver(true);
+				} else
+					updateAnimationTick();
+
+				return;
+			}
+	        	
+	        	
+	        	
+	           // playing.setGameOver(true);
+	           
+	      
 
 	        updatePos();
 

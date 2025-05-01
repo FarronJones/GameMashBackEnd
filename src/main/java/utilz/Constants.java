@@ -7,6 +7,10 @@ import main.Game;
 
 public class Constants {
 	
+	public class UI {
+
+	}
+
 	public static final float GRAVITY = 0.04f * Game.SCALE;
 	public static final int ANI_SPEED = 15;
 	
@@ -114,6 +118,8 @@ public class Constants {
 		public static final int RUNNING  = 2;
 		public static final int JUMP = 3;
 		public static final int FALLING = 4;
+		public static final int DEAD = 5;
+
 		
 		public static int GetSpriteAmount(int player_action) {
 			
@@ -134,18 +140,21 @@ public class Constants {
 //			case GROUND:
 //				return 2;
 //			case FALLING:
+//			
 //			default:
 //				return 1;
 //			}
 			
 //			Burger
 			switch(player_action) {
-			
+			case DEAD:
+				return 8;
 			case RUNNING: 
 			case IDLE: 
 				return 6;
 			case JUMP:
 			case FALLING:
+			
 			default:
 				return 2;
 			}
