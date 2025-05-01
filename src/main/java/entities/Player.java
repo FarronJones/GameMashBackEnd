@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
+import audio.AudioPlayer;
 import gamestates.Playing;
 import main.Game;
 
@@ -85,8 +86,11 @@ import main.Game;
 	        		aniTick = 0;
 	        		aniIndex=0;
 	        		playing.setPlayerDying(true);
+	        		playing.getGame().getAudioPlayer().playEffect(AudioPlayer.DIE);
 				} else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= ANI_SPEED - 1) {
 					playing.setGameOver(true);
+					playing.getGame().getAudioPlayer().stopSong();
+					playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
 				} else
 					updateAnimationTick();
 
@@ -199,6 +203,7 @@ import main.Game;
 
 	    private void jump() {
 	        if (inAir) return;
+	        playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
 	        inAir = true;
 	        airSpeed = jumpSpeed;
 	    }

@@ -27,7 +27,7 @@ public class AudioPlayer {
 
 	private Clip[] songs, effects;
 	private int currentSongId;
-	private float volume = 0.75f;
+	private float volume = 0.55f;
 	private boolean songMute, effectMute;
 	private Random rand = new Random();
 
@@ -78,12 +78,12 @@ public class AudioPlayer {
 	}
 	
 	//Make sure this is uncommented later for the level songs to work once we have actual levels
-	//public void setLevelSong(int lvlIndex) {
-		//if (lvlIndex % 2 == 0)
-			//playSong(LEVEL_1); // FIXED typo: playsong -> playSong
-		//else
-			//playSong(LEVEL_2);
-	//}
+		public void setLevelSong(int lvlIndex) {
+			if (lvlIndex % 2 == 0)
+				playSong(Level_1); // FIXED typo: playsong -> playSong
+			else
+				playSong(Level_2);
+		}
 
 	public void lvlCompleted() {
 		stopSong();
