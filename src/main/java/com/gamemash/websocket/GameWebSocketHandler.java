@@ -4,7 +4,7 @@ import audio.AudioPlayer;
 import entities.Player;
 import gamestates.Gamestate;
 import gamestates.Playing;
-import org.json.JSONArray;
+import main.Game;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
@@ -17,11 +17,18 @@ import java.io.IOException;
 public class GameWebSocketHandler extends TextWebSocketHandler {
 
     private final AudioPlayer audioPlayer = new AudioPlayer();
-    private final Playing playing;
+    private Playing playing;
 
     public GameWebSocketHandler() {
-        this.playing = new Playing(null); // ✅ updated to not require Game instance
         Gamestate.state = Gamestate.MENU;
+    }
+
+    private void initPlayingIfNeeded() {
+        if (playing == null) {
+            // ⚠️ Replace this with a real Game instance if needed
+            Game game = new Game(); 
+            this.playing = new Playing(game);
+        }
     }
 
     @Override
@@ -32,21 +39,31 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
         switch (action) {
             case "startGame" -> {
+                initPlayingIfNeeded();
                 Gamestate.state = Gamestate.PLAYING;
                 audioPlayer.playSong(AudioPlayer.Level_1);
             }
-            case "pause" -> playing.setGameOver(true);
-            case "unpause" -> playing.unpauseGame();
+            case "pause" -> {
+                initPlayingIfNeeded();
+                playing.setGameOver(true);
+            }
+            case "unpause" -> {
+                initPlayingIfNeeded();
+                playing.unpauseGame();
+            }
             case "resetGame" -> {
+                initPlayingIfNeeded();
                 playing.resetAll();
                 Gamestate.state = Gamestate.PLAYING;
             }
             case "returnToMenu" -> {
+                initPlayingIfNeeded();
                 playing.resetAll();
                 Gamestate.state = Gamestate.MENU;
                 audioPlayer.playSong(AudioPlayer.MENU_1);
             }
             case "moveLeft" -> {
+                initPlayingIfNeeded();
                 if (Gamestate.state == Gamestate.PLAYING) {
                     Player player = playing.getPlayer();
                     player.setLeft(true);
@@ -54,6 +71,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
                 }
             }
             case "moveRight" -> {
+                initPlayingIfNeeded();
                 if (Gamestate.state == Gamestate.PLAYING) {
                     Player player = playing.getPlayer();
                     player.setRight(true);
@@ -61,13 +79,17 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
                 }
             }
             case "jump" -> {
+                initPlayingIfNeeded();
                 if (Gamestate.state == Gamestate.PLAYING) {
                     Player player = playing.getPlayer();
                     player.setJump(true);
                     audioPlayer.playEffect(AudioPlayer.JUMP);
                 }
             }
-            case "stop" -> playing.getPlayer().resetDirBooleans();
+            case "stop" -> {
+                initPlayingIfNeeded();
+                playing.getPlayer().resetDirBooleans();
+            }
             case "toggleMusic" -> audioPlayer.toggleSongMute();
             case "toggleSfx" -> audioPlayer.toggleEffectMute();
             case "setVolume" -> {
@@ -75,6 +97,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
                 audioPlayer.setVolume(volume);
             }
             case "getGameState" -> {
+                initPlayingIfNeeded();
                 sendJson(session, getGameStateJson());
                 return;
             }
@@ -86,6 +109,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
         }
 
         if (Gamestate.state == Gamestate.PLAYING) {
+            initPlayingIfNeeded();
             playing.update();
         }
 
@@ -93,6 +117,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     }
 
     private JSONObject getGameStateJson() {
+        initPlayingIfNeeded();
         Player player = playing.getPlayer();
 
         JSONObject json = new JSONObject();
