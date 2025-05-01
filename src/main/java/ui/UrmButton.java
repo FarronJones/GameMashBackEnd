@@ -1,9 +1,12 @@
 package ui;
 
 import java.awt.Graphics;
+
 import java.awt.image.BufferedImage;
 
-import static utilz.Constants.URMButtons.*;
+import static utilz.Constants.URMButtons.URM_SIZE;
+import static utilz.Constants.URMButtons.URM_DEFAULT_SIZE;
+
 import utilz.LoadSave;
 
 public class UrmButton extends PauseButton{
@@ -27,6 +30,8 @@ public class UrmButton extends PauseButton{
     }
 
     public void update(){
+    	 index = 0;
+    	 
         if(mouseOver)
             index=1;
         if(mousePressed)
